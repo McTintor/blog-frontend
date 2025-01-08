@@ -24,7 +24,7 @@ const Home = () => {
       <h1>All Posts</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
       {posts.map((post) => (
-        <div key={post.id}>
+        <div key={post.id}>e
           <h2>{post.title}</h2>
           <p>{post.content}</p>
           <p>
