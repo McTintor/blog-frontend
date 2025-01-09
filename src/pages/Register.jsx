@@ -3,7 +3,7 @@ import { register } from "../services/api";
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
   });
@@ -35,8 +35,8 @@ const Register = () => {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          name="name"
-          placeholder="Name"
+          name="username"
+          placeholder="username"
           value={formData.name}
           onChange={handleChange}
           required
