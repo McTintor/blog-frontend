@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 import { useEffect, useState } from "react";
 import { getPosts } from "../services/api";
 
@@ -10,7 +12,6 @@ const Home = () => {
       try {
         const response = await getPosts();
         setPosts(response.data);
-      // eslint-disable-next-line no-unused-vars
       } catch (err) {
         setError("Failed to fetch posts");
       }
@@ -20,13 +21,12 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
+    <div className="mainpage-container">
       <h1>All Posts</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
       {posts.map((post) => (
-        <div key={post.id}>
+        <div key={post.id} className="mainpage-post-container">
           <h2>{post.title}</h2>
-          <p>{post.content}</p>
           <p>
             <i>by {post.author?.username || "Unknown"}</i>
           </p>

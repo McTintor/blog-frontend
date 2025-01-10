@@ -4,6 +4,7 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 import CreatePost from "./pages/CreatePost";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import './App.css'
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/create-post" element={<CreatePost />} />
       </Routes>
+      <Footer />
     </Router>
   );
 }
