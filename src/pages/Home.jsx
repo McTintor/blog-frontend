@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getPosts } from "../services/api";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -26,9 +27,9 @@ const Home = () => {
       {error && <p style={{ color: "red" }}>{error}</p>}
       {posts.map((post) => (
         <div key={post.id} className="mainpage-post-container">
-          <h2>{post.title}</h2>
+          <h2><Link to={`/posts/${post.id}`} className="hover-text">{post.title}</Link></h2>
           <p>
-            <i>by {post.author?.username || "Unknown"}</i>
+            <i>by <a href="" className="username-text">{post.author?.username || "Unknown"}</a></i>
           </p>
         </div>
       ))}
