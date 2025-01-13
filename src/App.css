@@ -31,7 +31,7 @@ nav {
   background-color: #F5F5DC;
 }
 
-.nav-ul {
+.nav-container {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -41,15 +41,29 @@ nav {
   gap: 1rem;
 }
 
-.nav-ul > li {
+.nav-container > a {
   border-radius: 4px;
   padding: 1rem;
   font-size: large;
   font-weight: bold;
 }
 
-.nav-ul > li:hover {
+.nav-container > a:hover {
   background-color:#FF6F61;
+}
+
+.nav-container > button {
+  border-radius: 4px;
+  padding: 1rem;
+  font-size: large;
+  font-weight: bold;
+  border: none;
+  background-color: inherit;
+}
+
+.nav-container > button:hover {
+  background-color: #FF6F61;
+  cursor: pointer;
 }
 
 .hover-text {
@@ -163,4 +177,104 @@ p {
 .submit-button:active {
   background-color: #FF6F61;
   transform: translateY(0); /* Remove lift effect */
+}
+
+.edit-button {
+  border: 1px solid #4B2E2E;
+  border-radius: 4px;
+  background-color: #F5F5DC;
+}
+
+.edit-button:hover {
+  color: #FF6F61;
+}
+
+.create-post-container {
+  width: 90%;
+  height: 75vh;
+  text-align: center;
+  padding: 3rem;
+}
+
+.create-post-form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2rem;
+  margin-top: 5rem;
+}
+
+.create-post-form > button {
+  padding: 10px 15px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #4B2E2E;
+  background-color: #F5F5DC;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.create-post-form > button:hover {
+  background-color: #FF6F61;
+  transform: translateY(-2px); /* Subtle lift effect */
+}
+
+.create-post-form > button:active {
+  background-color: #FF6F61;
+  transform: translateY(0); /* Remove lift effect */
+}
+
+.create-post-form > textarea {
+  width: 60%; /* Full width of the container */
+  min-height: 350px; /* Makes it larger */
+  padding: 15px; /* Inner padding for better spacing */
+  font-size: 16px; /* Larger text for readability */
+  line-height: 1.5; /* Improve text readability */
+  border: 1px solid #ccc; /* Subtle border */
+  border-radius: 8px; /* Smooth corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  outline: none; /* Removes default focus outline */
+  resize: vertical; /* Allow resizing only vertically */
+  transition: border-color 0.3s, box-shadow 0.3s; /* Smooth effects */
+}
+
+.create-post-form > textarea:focus {
+  border-color: #db5b34; /* Highlighted border color */
+  box-shadow: 0 4px 8px rgba(219, 99, 52, 0.3); /* Glow effect */
+}
+
+/* Placeholder text styling */
+.create-post-form > textarea::placeholder {
+  color: #aaa; /* Subtle placeholder color */
+  font-style: italic;
+}
+
+/* Input styling */
+.modern-input {
+  width: 40%; /* Full width of the container */
+  padding: 12px 15px; /* Inner padding for a modern look */
+  font-size: 16px; /* Larger font for readability */
+  line-height: 1.5; /* Better spacing for text */
+  border: 1px solid #ccc; /* Subtle border */
+  border-radius: 8px; /* Smooth corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  outline: none; /* Remove default focus outline */
+  transition: border-color 0.3s, box-shadow 0.3s; /* Smooth effects */
+}
+
+/* Focus effect */
+.modern-input:focus {
+  border-color: #db5b34; /* Highlighted border color */
+  box-shadow: 0 4px 8px rgba(219, 99, 52, 0.3); /* Glow effect */
+}
+
+/* Placeholder text styling */
+.modern-input::placeholder {
+  color: #aaa; /* Subtle placeholder color */
+  font-style: italic;
 }

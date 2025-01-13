@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createPost } from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 const CreatePost = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +9,7 @@ const CreatePost = () => {
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -23,16 +25,22 @@ const CreatePost = () => {
       setSuccess("Post created successfully!");
       setError("");
       setFormData({ title: "", content: "" });
+
+      // Redirect to the main page after success
+      navigate("/");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to create post");
+      console.error(err);
       setSuccess("");
     }
   };
 
   return (
-    <div>
+    <div className="create-post-container">
       <h1>Create Post</h1>
-      <form onSubmit={handleSubmit}>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {success && <p style={{ color: "green" }}>{success}</p>}
+      <form className="create-post-form" onSubmit={handleSubmit}>
         <input
           type="text"
           name="title"
@@ -40,6 +48,7 @@ const CreatePost = () => {
           value={formData.title}
           onChange={handleChange}
           required
+          className="modern-input"
         />
         <textarea
           name="content"
@@ -50,8 +59,6 @@ const CreatePost = () => {
         />
         <button type="submit">Create</button>
       </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
     </div>
   );
 };

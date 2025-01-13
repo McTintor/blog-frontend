@@ -1,52 +1,63 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { login } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const navigate = useNavigate();
+  const { login: loginUser } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const { data } = await login(formData.email, formData.password);
-      localStorage.setItem("token", data.token); // Save token in localStorage
-      setError("");
-      alert("Login successful!");
+      const response = await login(email, password);
+      const token = response.data.token;
+      const user = response.data.user;
+
+      // Save token and user data, then update global auth state
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      loginUser({ user, token });
+
+      // Redirect to home
+      navigate("/");
+    // eslint-disable-next-line no-unused-vars
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      setError("Invalid credentials. Please try again.");
     }
   };
 
   return (
-    <div>
-      <h1>Login</h1>
+    <div className="login-container">
+      <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Email:</label>
+          <label htmlFor="email">Email:</label>
           <input
             type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
         <div>
-          <label>Password:</label>
+          <label htmlFor="password">Password:</label>
           <input
             type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
+        {error && <p style={{ color: "red" }}>{error}</p>}
         <button type="submit">Login</button>
       </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 };

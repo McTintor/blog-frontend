@@ -1,12 +1,11 @@
 /* eslint-disable no-unused-vars */
 
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getPostById, addComment, deleteComment, updateComment, getCurrentUser } from "../services/api";
 
 const Post = () => {
   const { postId } = useParams();
-  const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [error, setError] = useState("");
   const [commentContent, setCommentContent] = useState("");
@@ -77,10 +76,6 @@ const Post = () => {
 
   return (
     <>
-      <button className="home-button" onClick={() => navigate("/")}>
-        Back to Home
-      </button>
-
       <div className="post-container">
         <h1>{post.title}</h1>
         <p>{post.content}</p>
@@ -147,10 +142,10 @@ const Post = () => {
                   </p>
                   {currentUser && comment.userId === currentUser.data.id && (
                     <div>
-                      <button onClick={() => setEditMode(comment.id)}>
+                      <button className="edit-button" onClick={() => setEditMode(comment.id)}>
                         Edit 🖊️
                       </button>
-                      <button onClick={() => handleDelete(comment.id)}>
+                      <button className="edit-button" onClick={() => handleDelete(comment.id)}>
                         Delete ❌
                       </button>
                     </div>

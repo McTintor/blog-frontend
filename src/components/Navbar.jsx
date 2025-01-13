@@ -1,14 +1,54 @@
+import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
+  const { user, logout } = useAuth();
+
+  const renderLinks = () => {
+    if (!user) {
+      // If no user is logged in, show Login and Register
+      return (
+        <>
+          <Link to="/login">Login</Link>
+          <Link to="/register">Register</Link>
+        </>
+      );
+    }
+
+    // Links for logged-in users
+    if (user.role === "reader") {
+      return <Link to="/">Home</Link>; // Readers only have access to Home
+    }
+
+    if (user.role === "author") {
+      return (
+        <>
+          <Link to="/">Home</Link>
+          <Link to="/create-post">Create Post</Link>
+        </>
+      );
+    }
+
+    if (user.role === "admin") {
+      return (
+        <>
+          <Link to="/">Home</Link>
+          <Link to="/create-post">Create Post</Link>
+          <Link to="/admin">Admin Panel</Link>
+        </>
+      );
+    }
+  };
+
   return (
-    <nav>
-      <ul className="nav-ul">
-        <li><Link to="/register">Register</Link></li>
-        <li><Link to="/login">Login</Link></li>
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/create-post">Create Post</Link></li>
-      </ul>
+    <nav className="nav">
+      <div className="nav-container">{renderLinks()}
+      {user && (
+        <button onClick={logout}>
+          Logout
+        </button>
+      )}
+      </div>
     </nav>
   );
 };
