@@ -51,6 +51,7 @@ const CreatePost = () => {
           className="modern-input"
         />
         <textarea
+          className="modern-textarea"
           name="content"
           placeholder="Content"
           value={formData.content}

@@ -1,8 +1,14 @@
-/* eslint-disable no-unused-vars */
-
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getPostById, addComment, deleteComment, updateComment, getCurrentUser } from "../services/api";
+import {
+  getPostById,
+  addComment,
+  deleteComment,
+  updateComment,
+  getCurrentUser,
+  updatePost,
+  deletePost,
+} from "../services/api";
 
 const Post = () => {
   const { postId } = useParams();
@@ -10,155 +16,214 @@ const Post = () => {
   const [error, setError] = useState("");
   const [commentContent, setCommentContent] = useState("");
   const [success, setSuccess] = useState("");
-  const [editMode, setEditMode] = useState(null);
-  const [editedContent, setEditedContent] = useState("");
+  const [editModeComment, setEditModeComment] = useState(null);
+  const [editedComment, setEditedComment] = useState("");
+  const [isEditingPost, setIsEditingPost] = useState(false);
+  const [editedPost, setEditedPost] = useState({ title: "", content: "" });
   const [currentUser, setCurrentUser] = useState(null);
 
-  const handleAddComment = async (e) => {
-    e.preventDefault();
-    try {
-      await addComment(postId, { content: commentContent });
-      setSuccess("Comment added successfully!");
-      setCommentContent("");
-      fetchPost(); // Refresh comments
-    } catch (err) {
-      setError("Failed to add comment");
-    }
-  };
+  const navigate = useNavigate();
 
-  const handleDelete = async (commentId) => {
-    try {
-      await deleteComment(commentId);
-      setSuccess("Comment deleted successfully");
-      fetchPost(); // Refresh comments
-    } catch (err) {
-      setError("Failed to delete comment");
-    }
-  };
+// Fetch the current user if logged in
+const fetchUser = async () => {
+  try {
+    const user = await getCurrentUser();
+    setCurrentUser(user); // If the user is logged in, set user details
+  } catch {
+    // If user is not logged in, don't set currentUser, but allow viewing the post
+  }
+};
 
-  const handleEdit = async (commentId) => {
-    try {
-      await updateComment(commentId, { content: editedContent });
-      setSuccess("Comment updated successfully");
-      setEditMode(null);
-      fetchPost(); // Refresh comments
-    } catch (err) {
-      setError("Failed to update comment");
-    }
-  };
-
-  const fetchUser = async () => {
-    try {
-      const user = await getCurrentUser();
-      setCurrentUser(user);
-    } catch (err) {
-      console.error("Failed to fetch current user", err);
-      setCurrentUser(null); // Gracefully handle unauthenticated state
-    }
-  };
-
+  // Fetch the post details
   const fetchPost = async () => {
     try {
       const response = await getPostById(postId);
       setPost(response.data);
-    } catch (err) {
-      setError("Failed to fetch post details");
+      setEditedPost({ title: response.data.title, content: response.data.content });
+    } catch {
+      setError("Failed to fetch post details.");
+    }
+  };
+
+  // Add a comment
+  const handleAddComment = async (e) => {
+    e.preventDefault();
+    try {
+      await addComment(postId, { content: commentContent });
+      setCommentContent("");
+      setSuccess("Comment added successfully!");
+      fetchPost();
+    } catch {
+      setError("Failed to add comment.");
+    }
+  };
+
+  // Edit a comment
+  const handleEditComment = async (commentId) => {
+    try {
+      await updateComment(commentId, { content: editedComment });
+      setEditModeComment(null);
+      setSuccess("Comment updated successfully!");
+      fetchPost();
+    } catch {
+      setError("Failed to update comment.");
+    }
+  };
+
+  // Delete a comment
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await deleteComment(commentId);
+      setSuccess("Comment deleted successfully!");
+      fetchPost();
+    } catch {
+      setError("Failed to delete comment.");
+    }
+  };
+
+  // Edit the post
+  const handleEditPost = async () => {
+    try {
+      await updatePost(postId, editedPost);
+      setIsEditingPost(false);
+      setSuccess("Post updated successfully!");
+      fetchPost();
+    } catch {
+      setError("Failed to update post.");
+    }
+  };
+
+  // Delete the post
+  const handleDeletePost = async () => {
+    try {
+      await deletePost(postId);
+      setSuccess("Post deleted successfully!");
+      navigate("/");
+    } catch {
+      setError("Failed to delete post.");
     }
   };
 
   useEffect(() => {
-    fetchUser();  // Fetch user once when component mounts
-    fetchPost();  // Fetch post details once when component mounts
+    fetchUser();
+    fetchPost();
   }, [postId]);
 
   if (error) return <p style={{ color: "red" }}>{error}</p>;
   if (!post) return <p>Loading...</p>;
 
+  const isAuthor = currentUser && post.author?.id === currentUser.data.id;
+  const isAdmin = currentUser && currentUser.data.role === "admin";
+
   return (
+    <div className="post-container">
+  {isEditingPost ? (
     <>
-      <div className="post-container">
-        <h1>{post.title}</h1>
-        <p>{post.content}</p>
-        <p>
-          <i>by {post.author?.username} </i>
-          <span>
-            {new Date(post.createdAt).toLocaleDateString("en-GB", {
-              weekday: "short",
-              day: "2-digit",
-              month: "short",
-              year: "numeric",
-            })}
-          </span>
-        </p>
+      <input
+        className="modern-input"
+        type="text"
+        value={editedPost.title}
+        onChange={(e) => setEditedPost({ ...editedPost, title: e.target.value })}
+      />
+      <textarea
+        className="modern-textarea"
+        value={editedPost.content}
+        onChange={(e) => setEditedPost({ ...editedPost, content: e.target.value })}
+      />
+      <button className="edit-button" onClick={handleEditPost}>Save</button>
+      <button className="edit-button" onClick={() => setIsEditingPost(false)}>Cancel</button>
+    </>
+  ) : (
+    <>
+      <h1>{post.title}</h1>
+      <p>{post.content}</p>
+      <p>
+        <i>by {post.author?.username}</i>{" "}
+        <span>
+          {new Date(post.createdAt).toLocaleDateString("en-GB", {
+            weekday: "short",
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          })}
+        </span>
+      </p>
+    </>
+  )}
 
-        <h3>Comments:</h3>
+  {(isAuthor || isAdmin) && !isEditingPost && (  // Show edit/delete buttons only if not in edit mode
+    <div>
+      <button className="edit-button" onClick={() => setIsEditingPost(true)}>Edit Post</button>
+      <button className="edit-button" onClick={handleDeletePost}>Delete Post</button>
+    </div>
+  )}
 
-        <form
-          className="comment-section"
-          onSubmit={handleAddComment}
-          style={{ marginTop: "2rem" }}
-        >
+      <h3>Comments:</h3>
+      <form className="comment-section" onSubmit={handleAddComment}>
+  {currentUser && ( // Only show comment box if user is logged in
+    <>
+      <textarea
+        value={commentContent}
+        onChange={(e) => setCommentContent(e.target.value)}
+        placeholder="Write a comment..."
+        required
+        className="comment-box"
+      ></textarea>
+      <button className="submit-button" type="submit">Add Comment</button>
+    </>
+  )}
+  {!currentUser && <p>Please log in to comment.</p>}  {/* Display message for anonymous users */}
+</form>
+
+<div className="comments-container">
+  {post.comments?.map((comment) => (
+    <div key={comment.id}>
+      {editModeComment === comment.id ? (
+        <>
           <textarea
             className="comment-box"
-            value={commentContent}
-            onChange={(e) => setCommentContent(e.target.value)}
-            placeholder="Write a comment..."
+            value={editedComment}
+            onChange={(e) => setEditedComment(e.target.value)}
             required
-          ></textarea>
-          <button className="submit-button" type="submit">
-            Add Comment
-          </button>
-        </form>
-        {success && <p style={{ color: "green" }}>{success}</p>}
-        {error && <p style={{ color: "red" }}>{error}</p>}
+          />
+          <br></br>
+          <button className="edit-button" onClick={() => handleEditComment(comment.id)}>Save</button>
+          <button className="edit-button" onClick={() => { setEditModeComment(null); setEditedComment(comment.content); }}>Cancel</button>
+        </>
+      ) : (
+        <>
+          <p>{comment.content}</p>
+          <p>
+            <i>by {comment.user?.username}</i>{" "}
+            <span>
+              {new Date(comment.createdAt).toLocaleDateString("en-GB", {
+                weekday: "short",
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })}
+            </span>
+          </p>
+        </>
+      )}
 
-        {post.comments?.length > 0 ? (
-          <div className="comments-container">
-            <ul className="comments-ul">
-              {post.comments.map((comment) => (
-                <li key={comment.id}>
-                  <p>{comment.user?.username}:</p>
-                  {editMode === comment.id ? (
-                    <>
-                      <textarea
-                        value={editedContent}
-                        onChange={(e) => setEditedContent(e.target.value)}
-                      />
-                      <button onClick={() => handleEdit(comment.id)}>
-                        Save
-                      </button>
-                      <button onClick={() => setEditMode(null)}>Cancel</button>
-                    </>
-                  ) : (
-                    <p>{comment.content}</p>
-                  )}
-                  <p>
-                    {new Date(comment.createdAt).toLocaleDateString("en-GB", {
-                      weekday: "short",
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </p>
-                  {currentUser && comment.userId === currentUser.data.id && (
-                    <div>
-                      <button className="edit-button" onClick={() => setEditMode(comment.id)}>
-                        Edit 🖊️
-                      </button>
-                      <button className="edit-button" onClick={() => handleDelete(comment.id)}>
-                        Delete ❌
-                      </button>
-                    </div>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : (
-          <p>No comments yet.</p>
-        )}
-      </div>
-    </>
+      {(currentUser && (comment.userId === currentUser.data.id || currentUser.data.role === "admin")) && (
+        <div>
+          {!editModeComment && ( // Show edit/delete buttons only if not in edit mode
+            <>
+              <button className="edit-button" onClick={() => { setEditModeComment(comment.id); setEditedComment(comment.content); }}>Edit 🖊️</button>
+              <button className="edit-button" onClick={() => handleDeleteComment(comment.id)}>Delete ❌</button>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  ))}
+</div>
+
+
+      {success && <p style={{ color: "green" }}>{success}</p>}
+    </div>
   );
 };
 

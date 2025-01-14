@@ -229,7 +229,7 @@ p {
   transform: translateY(0); /* Remove lift effect */
 }
 
-.create-post-form > textarea {
+.modern-textarea {
   width: 60%; /* Full width of the container */
   min-height: 350px; /* Makes it larger */
   padding: 15px; /* Inner padding for better spacing */
@@ -243,13 +243,13 @@ p {
   transition: border-color 0.3s, box-shadow 0.3s; /* Smooth effects */
 }
 
-.create-post-form > textarea:focus {
+.modern-textarea:focus {
   border-color: #db5b34; /* Highlighted border color */
   box-shadow: 0 4px 8px rgba(219, 99, 52, 0.3); /* Glow effect */
 }
 
 /* Placeholder text styling */
-.create-post-form > textarea::placeholder {
+.modern-textarea::placeholder {
   color: #aaa; /* Subtle placeholder color */
   font-style: italic;
 }
@@ -277,4 +277,32 @@ p {
 .modern-input::placeholder {
   color: #aaa; /* Subtle placeholder color */
   font-style: italic;
+}
+
+.login-container, .register-container {
+  width: 100%;
+  min-height: 70vh;
+  margin-bottom: 6.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form, .register-form {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+}
+
+.login-form > div, .register-form > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 30%;
 }

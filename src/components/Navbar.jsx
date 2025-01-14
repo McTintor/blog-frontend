@@ -1,14 +1,18 @@
 import { useAuth } from "../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+
+  const navigate = useNavigate();
 
   const renderLinks = () => {
     if (!user) {
       // If no user is logged in, show Login and Register
       return (
         <>
+          <Link to="/">Home</Link>
           <Link to="/login">Login</Link>
           <Link to="/register">Register</Link>
         </>
@@ -44,9 +48,9 @@ const Navbar = () => {
     <nav className="nav">
       <div className="nav-container">{renderLinks()}
       {user && (
-        <button onClick={logout}>
+        <button onClick={() => { logout(); navigate("/"); }}>
           Logout
-        </button>
+        </button>      
       )}
       </div>
     </nav>
