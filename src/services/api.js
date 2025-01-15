@@ -30,6 +30,10 @@ export const deletePost = (postId) => API.delete(`/posts/${postId}`);
 
 export const updatePost = (postId, data) => API.put(`/posts/${postId}`, data);
 
+export const getPostsByAuthor = (username) => API.get(`/posts/author/${username}`);
+
+export const searchPosts = (query) => API.get(`/search?query=${query}`); // Added search functionality
+
 // Comment endpoints
 export const addComment = (postId, commentData) =>
   API.post(`/comments/${postId}`, { postId, ...commentData });
