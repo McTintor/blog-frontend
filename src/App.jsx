@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AuthorPosts from "./pages/AuthorPosts";
 import SearchResults from "./pages/SearchResults";
+import AdminPanel from "./pages/AdminPanel";
 import './App.css'
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/create-post" element={<CreatePost />} />
         <Route path="/posts/author/:username" element={<AuthorPosts />} />
         <Route path="/search" element={<SearchResults />} />
+        <Route path="/admin" element={<AdminPanel />} />
       </Routes>
       <Footer />
     </Router>

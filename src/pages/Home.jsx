@@ -1,50 +1,38 @@
-/* eslint-disable no-unused-vars */
-
 import { useEffect, useState } from "react";
-import { getPosts, searchPosts } from "../services/api";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { getPosts } from "../services/api";
+import { Link, useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState("");
   const [query, setQuery] = useState(""); // State for search query
-  const [searchError, setSearchError] = useState("");
+  const [warning, setWarning] = useState(""); // For empty query warning
 
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
 
-  // Extract search query from URL on load
   useEffect(() => {
-    const queryParam = searchParams.get("query") || "";
-    setQuery(queryParam);
-    fetchPosts(queryParam);
-  }, [searchParams]);
+    fetchPosts(); // Fetch all posts initially
+  }, []);
 
-  // Fetch posts from the backend
-  const fetchPosts = async (searchQuery = "") => {
+  const fetchPosts = async () => {
     try {
-      const response = await getPosts(searchQuery); // Pass searchQuery if present
+      const response = await getPosts(); // Fetch all posts
       setPosts(response.data);
+      setError("");
+    // eslint-disable-next-line no-unused-vars
     } catch (err) {
       setError("Failed to fetch posts");
     }
   };
 
-  // Handle search functionality
-  const handleSearch = async () => {
-    try {
-      // Update the browser URL to reflect the search query
-      navigate(`/search?query=${encodeURIComponent(query)}`);
-  
-      const response = await searchPosts(query); // Make the API call to search for posts
-      setPosts(response.data);
-      setSearchError("");
-    } catch (err) {
-      setSearchError("No posts found for your search query.");
-      setPosts([]); // Clear posts if no results
+  const handleSearch = () => {
+    if (!query.trim()) {
+      setWarning("Please enter a search query.");
+      return;
     }
+    setWarning(""); // Clear warning
+    navigate(`/search?query=${encodeURIComponent(query)}`); // Navigate to SearchResults with query
   };
-  
 
   return (
     <div className="mainpage-container">
@@ -55,16 +43,14 @@ const Home = () => {
           placeholder="Search by title or author username..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          required
         />
         <button className="search-button" onClick={handleSearch}>
           Search
         </button>
       </div>
 
-      {searchError && <p style={{ color: "red" }}>{searchError}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
+      {warning && <p style={{ color: "orange" }}>{warning}</p>} {/* Warning message */}
+      {error && <p style={{ color: "red" }}>{error}</p>} {/* Error message */}
       <h1>All Posts</h1>
       {posts.map((post) => (
         <div key={post.id} className="mainpage-post-container">

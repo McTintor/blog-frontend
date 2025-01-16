@@ -279,7 +279,7 @@ p {
   font-style: italic;
 }
 
-.login-container, .register-container {
+.login-container, .register-container, .admin-panel {
   width: 100%;
   min-height: 70vh;
   margin-bottom: 6.5rem;
@@ -290,7 +290,7 @@ p {
   justify-content: center;
 }
 
-.login-form, .register-form {
+.login-form, .register-form, .promote-form {
   width: 60%;
   display: flex;
   flex-direction: column;
@@ -299,7 +299,7 @@ p {
   gap: 3rem;
 }
 
-.login-form > div, .register-form > div {
+.login-form > div, .register-form > div, .promote-form > div {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -348,4 +348,12 @@ p {
 
 .search-button:hover {
   background-color: #FF6F61;
+}
+
+.brown {
+  color: #4B2E2E;
+}
+
+.h1-margin {
+  margin: 3rem 0;
 }

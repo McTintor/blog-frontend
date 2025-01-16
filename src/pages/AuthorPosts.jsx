@@ -5,31 +5,39 @@ import { getPostsByAuthor } from "../services/api";
 const AuthorPosts = () => {
   const { username } = useParams();
   const [posts, setPosts] = useState([]);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const response = await getPostsByAuthor(username);
-        setPosts(response.data);
-      // eslint-disable-next-line no-unused-vars
+        setPosts(response.data); // Set posts if the API call is successful
+        setError(null); // Clear any previous errors
       } catch (err) {
-        setError("Failed to fetch posts by this author.");
+        if (err.response && err.response.status === 404) {
+          // Handle case where no posts exist
+          setPosts([]);
+          setError("No posts found for this author.");
+        } else {
+          // Handle other errors (e.g., network issues)
+          setPosts([]);
+          setError("An error occurred while fetching posts.");
+        }
       }
     };
 
     fetchPosts();
   }, [username]);
 
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
-
   return (
     <div className="mainpage-container">
-      {posts.length === 0 ? (
-        <p>No posts found for this author.</p>
+      {error ? (
+        <p>{error}</p> // Display the error message
+      ) : posts.length === 0 ? (
+        <p>No posts found for this author.</p> // Fallback for empty posts
       ) : (
         <>
-          <h1>Posts by {username}</h1>
+          <h1 className="h1-margin">Posts by {username}</h1>
           {posts.map((post) => (
             <div key={post.id} className="mainpage-post-container">
               <h2>
@@ -43,8 +51,7 @@ const AuthorPosts = () => {
         </>
       )}
     </div>
-  );  
-
+  );
 };
 
 export default AuthorPosts;

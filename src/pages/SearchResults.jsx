@@ -8,14 +8,17 @@ const SearchResults = () => {
   const [error, setError] = useState("");
   const [query, setQuery] = useState(""); // For search input value
   const [searchQuery, setSearchQuery] = useState(""); // To store confirmed query for h1
+  const [warning, setWarning] = useState(""); // For empty query warning
   const [searchParams] = useSearchParams();
-  
+
   const navigate = useNavigate();
   const queryParam = searchParams.get("query");
 
   useEffect(() => {
     if (queryParam) {
-      setQuery(queryParam); // Set the query from the URL
+      setQuery(queryParam); // Set input value from URL
+      setSearchQuery(queryParam); // Update the displayed query in h1
+      fetchSearchResults(queryParam); // Fetch results on queryParam change
     }
   }, [queryParam]);
 
@@ -31,17 +34,13 @@ const SearchResults = () => {
     }
   };
 
-  const handleSearch = async () => {
-    try {
-      // Update the browser URL to reflect the search query
-      navigate(`/search?query=${encodeURIComponent(query)}`);
-      setSearchQuery(query); // Update the search query after search
-      fetchSearchResults(query);
-    // eslint-disable-next-line no-unused-vars
-    } catch (err) {
-      setError("No posts found for your search query.");
-      setPosts([]); // Clear posts if no results
+  const handleSearch = () => {
+    if (!query.trim()) {
+      setWarning("Please enter a search query.");
+      return;
     }
+    setWarning(""); // Clear warning
+    navigate(`/search?query=${encodeURIComponent(query)}`); // Update URL
   };
 
   return (
@@ -52,18 +51,20 @@ const SearchResults = () => {
           type="text"
           placeholder="Search by title or author username..."
           value={query}
-          onChange={(e) => setQuery(e.target.value)} // Make input editable
-          required
+          onChange={(e) => setQuery(e.target.value)} // Allow typing in the search input
         />
         <button className="search-button" onClick={handleSearch}>
           Search
         </button>
       </div>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      {/* Display the search query only after the user has clicked the search button */}
+      {warning && <p style={{ color: "orange" }}>{warning}</p>} {/* Warning message */}
+      {error && <p style={{ color: "red" }}>{error}</p>} {/* Error message */}
       {searchQuery && <h1>Search Results for &quot;{searchQuery}&quot;</h1>}
+
+      {posts.length === 0 && !error && searchQuery && (
+        <p>No results found for &quot;{searchQuery}&quot;.</p>
+      )}
 
       {posts.map((post) => (
         <div key={post.id} className="mainpage-post-container">

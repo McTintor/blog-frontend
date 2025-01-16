@@ -29,6 +29,11 @@ const Navbar = () => {
         <>
           <Link to="/">Home</Link>
           <Link to="/create-post">Create Post</Link>
+          <Link
+              to={`/posts/author/${user.username}`}
+            >
+              My Posts
+            </Link>
         </>
       );
     }
@@ -48,7 +53,7 @@ const Navbar = () => {
     <nav className="nav">
       <div className="nav-container">{renderLinks()}
       {user && (
-        <button onClick={() => { logout(); navigate("/"); }}>
+        <button className="brown" onClick={() => { logout(); navigate("/"); }}>
           Logout
         </button>      
       )}

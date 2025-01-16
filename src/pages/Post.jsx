@@ -112,7 +112,7 @@ const fetchUser = async () => {
   if (error) return <p style={{ color: "red" }}>{error}</p>;
   if (!post) return <p>Loading...</p>;
 
-  const isAuthor = currentUser && post.author?.id === currentUser.data.id;
+  const isAuthor = currentUser && currentUser.data.role === "author" && post.author?.id === currentUser.data.id;
   const isAdmin = currentUser && currentUser.data.role === "admin";
 
   return (

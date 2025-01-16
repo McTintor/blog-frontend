@@ -46,3 +46,7 @@ export const updateComment = (commentId, data) =>
 
 // User endpoints
 export const getCurrentUser = () => API.get("/users/me");
+
+// User management endpoints
+export const promoteUser = (username, newRole) =>
+  API.post("/admin/promote", { username, newRole });
