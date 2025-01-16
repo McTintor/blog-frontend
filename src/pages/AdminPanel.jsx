@@ -24,7 +24,7 @@ const AdminPanel = () => {
 
   return (
     <div className="admin-panel">
-      <h1>Admin Panel</h1>
+      <h1>Change user role</h1>
       <form onSubmit={handlePromote} className="promote-form">
         <label>
           Username:

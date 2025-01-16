@@ -9,28 +9,39 @@ const SearchResults = () => {
   const [query, setQuery] = useState(""); // For search input value
   const [searchQuery, setSearchQuery] = useState(""); // To store confirmed query for h1
   const [warning, setWarning] = useState(""); // For empty query warning
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [currentPage, setCurrentPage] = useState(1); // State for current page
+  const [totalPages, setTotalPages] = useState(1); // State for total pages
 
   const navigate = useNavigate();
   const queryParam = searchParams.get("query");
+  const pageParam = searchParams.get("page");
 
   useEffect(() => {
     if (queryParam) {
       setQuery(queryParam); // Set input value from URL
       setSearchQuery(queryParam); // Update the displayed query in h1
-      fetchSearchResults(queryParam); // Fetch results on queryParam change
     }
-  }, [queryParam]);
+    const page = pageParam ? parseInt(pageParam) : 1;
+    setCurrentPage(page); // Set current page from URL or default to 1
+    fetchSearchResults(queryParam, page); // Fetch results for the current page
+  }, [queryParam, pageParam]);
 
-  const fetchSearchResults = async (query) => {
+  const fetchSearchResults = async (query, page) => {
     try {
-      const response = await searchPosts(query); // Make the API call
-      setPosts(response.data);
+      const response = await searchPosts(query, page); // Make the API call
+      if (response.data && response.data.posts) {
+        setPosts(response.data.posts); // Set posts
+        setTotalPages(response.data.totalPages || 1); // Fallback to 1 if undefined
+      } else {
+        setPosts([]);
+        setError("No posts found for your search query.");
+      }
       setError("");
     // eslint-disable-next-line no-unused-vars
     } catch (err) {
-      setError("No posts found for your search query.");
-      setPosts([]); // Clear posts if no results
+      setError("An error occurred while fetching search results.");
+      setPosts([]); // Clear posts if an error occurs
     }
   };
 
@@ -40,7 +51,13 @@ const SearchResults = () => {
       return;
     }
     setWarning(""); // Clear warning
-    navigate(`/search?query=${encodeURIComponent(query)}`); // Update URL
+    navigate(`/search?query=${encodeURIComponent(query)}&page=1`); // Update URL with query and reset page to 1
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page); // Update current page
+    setSearchParams({ query: searchQuery, page }); // Update the page query parameter in the URL
+    fetchSearchResults(searchQuery, page); // Fetch results for the new page
   };
 
   return (
@@ -84,6 +101,27 @@ const SearchResults = () => {
           </p>
         </div>
       ))}
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="pagination-container">
+          {[...Array(totalPages)].map((_, index) => {
+            const page = index + 1;
+            return (
+              <button
+                key={page}
+                className={`pagination-button ${
+                  currentPage === page ? "active" : ""
+                }`}
+                onClick={() => handlePageChange(page)}
+                disabled={currentPage === page} // Disable current page button
+              >
+                {page}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

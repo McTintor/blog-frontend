@@ -20,7 +20,8 @@ export const login = (email, password) =>
 export const register = (data) => API.post("users/register", data);
 
 // Post endpoints
-export const getPosts = () => API.get("posts");
+export const getPosts = (page = 1, pageSize = 3) =>
+  API.get(`posts?page=${page}&pageSize=${pageSize}`);
 
 export const createPost = (data) => API.post("posts", data);
 
@@ -30,9 +31,12 @@ export const deletePost = (postId) => API.delete(`/posts/${postId}`);
 
 export const updatePost = (postId, data) => API.put(`/posts/${postId}`, data);
 
-export const getPostsByAuthor = (username) => API.get(`/posts/author/${username}`);
+export const getPostsByAuthor = (username, page = 1, pageSize = 3) =>
+  API.get(`/posts/author/${username}?page=${page}&pageSize=${pageSize}`);
 
-export const searchPosts = (query) => API.get(`/search?query=${query}`); // Added search functionality
+// Modified searchPosts to include pagination
+export const searchPosts = (query, page = 1, pageSize = 3) => 
+  API.get(`/search?query=${query}&page=${page}&pageSize=${pageSize}`);
 
 // Comment endpoints
 export const addComment = (postId, commentData) =>

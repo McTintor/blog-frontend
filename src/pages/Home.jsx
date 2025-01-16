@@ -1,25 +1,36 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { getPosts } from "../services/api";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState("");
   const [query, setQuery] = useState(""); // State for search query
   const [warning, setWarning] = useState(""); // For empty query warning
+  const [currentPage, setCurrentPage] = useState(1); // Current page state
+  const [pageSize, setPageSize] = useState(5); // Number of posts per page
+  const [totalPages, setTotalPages] = useState(1); // Total pages for pagination
 
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchPosts(); // Fetch all posts initially
-  }, []);
+    // Parse `page` from URL query parameters
+    const page = parseInt(searchParams.get("page")) || 1;
+    setCurrentPage(page);
+  }, [searchParams]);
+
+  useEffect(() => {
+    fetchPosts(); // Fetch posts when `currentPage` changes
+  }, [currentPage]);
 
   const fetchPosts = async () => {
     try {
-      const response = await getPosts(); // Fetch all posts
-      setPosts(response.data);
+      const response = await getPosts(currentPage, pageSize); // Fetch posts for the current page
+      setPosts(response.data.posts);
+      setTotalPages(response.data.totalPages); // Set the total pages from the backend
       setError("");
-    // eslint-disable-next-line no-unused-vars
     } catch (err) {
       setError("Failed to fetch posts");
     }
@@ -32,6 +43,12 @@ const Home = () => {
     }
     setWarning(""); // Clear warning
     navigate(`/search?query=${encodeURIComponent(query)}`); // Navigate to SearchResults with query
+  };
+
+  const handlePageChange = (page) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page); // Update local state
+    setSearchParams({ page }); // Update URL query parameter
   };
 
   return (
@@ -70,6 +87,24 @@ const Home = () => {
           </p>
         </div>
       ))}
+
+      <div className="pagination">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };
