@@ -124,7 +124,6 @@ p {
   overflow-wrap: break-word;
 }
 
-/* Container styling */
 .comment-section {
   display: flex;
   align-items: center;
@@ -139,24 +138,22 @@ p {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Textbox styling */
 .comment-box {
-  flex: 1; /* Allows the textbox to take up remaining space */
+  flex: 1;
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 6px;
   outline: none;
-  resize: none; /* Prevents resizing */
+  resize: none;
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .comment-box:focus {
-  border-color: #FF6F61; /* Highlight border on focus */
+  border-color: #FF6F61;
   box-shadow: 0 0 5px rgba(219, 52, 80, 0.5);
 }
 
-/* Button styling */
 .submit-button {
   padding: 10px 15px;
   font-size: 16px;
@@ -171,12 +168,12 @@ p {
 
 .submit-button:hover {
   background-color: #FF6F61;
-  transform: translateY(-2px); /* Subtle lift effect */
+  transform: translateY(-2px);
 }
 
 .submit-button:active {
   background-color: #FF6F61;
-  transform: translateY(0); /* Remove lift effect */
+  transform: translateY(0);
 }
 
 .edit-button {
@@ -221,61 +218,57 @@ p {
 
 .create-post-form > button:hover {
   background-color: #FF6F61;
-  transform: translateY(-2px); /* Subtle lift effect */
+  transform: translateY(-2px);
 }
 
 .create-post-form > button:active {
   background-color: #FF6F61;
-  transform: translateY(0); /* Remove lift effect */
+  transform: translateY(0);
 }
 
 .modern-textarea {
-  width: 60%; /* Full width of the container */
-  min-height: 350px; /* Makes it larger */
-  padding: 15px; /* Inner padding for better spacing */
-  font-size: 16px; /* Larger text for readability */
-  line-height: 1.5; /* Improve text readability */
-  border: 1px solid #ccc; /* Subtle border */
-  border-radius: 8px; /* Smooth corners */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  outline: none; /* Removes default focus outline */
-  resize: vertical; /* Allow resizing only vertically */
-  transition: border-color 0.3s, box-shadow 0.3s; /* Smooth effects */
+  width: 60%;
+  min-height: 350px;
+  padding: 15px;
+  font-size: 16px;
+  line-height: 1.5;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .modern-textarea:focus {
-  border-color: #db5b34; /* Highlighted border color */
-  box-shadow: 0 4px 8px rgba(219, 99, 52, 0.3); /* Glow effect */
+  border-color: #db5b34;
+  box-shadow: 0 4px 8px rgba(219, 99, 52, 0.3);
 }
 
-/* Placeholder text styling */
 .modern-textarea::placeholder {
-  color: #aaa; /* Subtle placeholder color */
+  color: #aaa;
   font-style: italic;
 }
 
-/* Input styling */
 .modern-input {
-  width: 40%; /* Full width of the container */
-  padding: 12px 15px; /* Inner padding for a modern look */
-  font-size: 16px; /* Larger font for readability */
-  line-height: 1.5; /* Better spacing for text */
-  border: 1px solid #ccc; /* Subtle border */
-  border-radius: 8px; /* Smooth corners */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  outline: none; /* Remove default focus outline */
-  transition: border-color 0.3s, box-shadow 0.3s; /* Smooth effects */
+  width: 40%;
+  padding: 12px 15px;
+  font-size: 16px;
+  line-height: 1.5;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-/* Focus effect */
 .modern-input:focus {
-  border-color: #db5b34; /* Highlighted border color */
-  box-shadow: 0 4px 8px rgba(219, 99, 52, 0.3); /* Glow effect */
+  border-color: #db5b34;
+  box-shadow: 0 4px 8px rgba(219, 99, 52, 0.3);
 }
 
-/* Placeholder text styling */
 .modern-input::placeholder {
-  color: #aaa; /* Subtle placeholder color */
+  color: #aaa;
   font-style: italic;
 }
 
@@ -318,7 +311,6 @@ p {
   width: 40%;
 }
 
-/* Search input */
 .search-input {
   width: 70%;
   padding: 10px 15px;
@@ -333,7 +325,6 @@ p {
   outline: none;
 }
 
-/* Search button */
 .search-button {
   padding: 10px 20px;
   border: none;

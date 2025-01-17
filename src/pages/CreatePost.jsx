@@ -26,7 +26,6 @@ const CreatePost = () => {
       setError("");
       setFormData({ title: "", content: "" });
 
-      // Redirect to the main page after success
       navigate("/");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to create post");

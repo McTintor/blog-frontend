@@ -6,22 +6,21 @@ const AuthorPosts = () => {
   const { username } = useParams();
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
-  const [totalPages, setTotalPages] = useState(1); // State for total pages
+  const [totalPages, setTotalPages] = useState(1);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Extract currentPage from URL query parameter or default to 1
   const currentPage = parseInt(searchParams.get("page")) || 1;
 
   useEffect(() => {
-    fetchPosts(currentPage); // Fetch posts whenever username or currentPage changes
+    fetchPosts(currentPage);
   }, [username, currentPage]);
 
   const fetchPosts = async (page) => {
     try {
-      const response = await getPostsByAuthor(username, page); // Pass the page to the API call
-      setPosts(response.data.posts); // Set posts from the response
-      setTotalPages(response.data.totalPages); // Set total pages from the response
-      setError(null); // Clear any previous errors
+      const response = await getPostsByAuthor(username, page);
+      setPosts(response.data.posts);
+      setTotalPages(response.data.totalPages);
+      setError(null);
     } catch (err) {
       if (err.response && err.response.status === 404) {
         setPosts([]);
@@ -34,16 +33,16 @@ const AuthorPosts = () => {
   };
 
   const handlePageChange = (page) => {
-    if (page < 1 || page > totalPages) return; // Prevent invalid page navigation
-    setSearchParams({ page }); // Update the `page` query parameter in the URL
+    if (page < 1 || page > totalPages) return;
+    setSearchParams({ page });
   };
 
   return (
     <div className="mainpage-container">
       {error ? (
-        <p>{error}</p> // Display the error message
+        <p>{error}</p>
       ) : posts.length === 0 ? (
-        <p>No posts found for this author.</p> // Fallback for empty posts
+        <p>No posts found for this author.</p>
       ) : (
         <>
           <h1 className="h1-margin">Posts by {username}</h1>
@@ -58,7 +57,6 @@ const AuthorPosts = () => {
             </div>
           ))}
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="pagination-container">
               {[...Array(totalPages)].map((_, index) => {
@@ -70,7 +68,7 @@ const AuthorPosts = () => {
                       currentPage === page ? "active" : ""
                     }`}
                     onClick={() => handlePageChange(page)}
-                    disabled={currentPage === page} // Disable current page button
+                    disabled={currentPage === page}
                   >
                     {page}
                   </button>

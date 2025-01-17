@@ -6,12 +6,12 @@ import { Link } from "react-router-dom";
 const SearchResults = () => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState("");
-  const [query, setQuery] = useState(""); // For search input value
-  const [searchQuery, setSearchQuery] = useState(""); // To store confirmed query for h1
-  const [warning, setWarning] = useState(""); // For empty query warning
+  const [query, setQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [warning, setWarning] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(1); // State for current page
-  const [totalPages, setTotalPages] = useState(1); // State for total pages
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const navigate = useNavigate();
   const queryParam = searchParams.get("query");
@@ -19,20 +19,20 @@ const SearchResults = () => {
 
   useEffect(() => {
     if (queryParam) {
-      setQuery(queryParam); // Set input value from URL
-      setSearchQuery(queryParam); // Update the displayed query in h1
+      setQuery(queryParam);
+      setSearchQuery(queryParam);
     }
     const page = pageParam ? parseInt(pageParam) : 1;
-    setCurrentPage(page); // Set current page from URL or default to 1
-    fetchSearchResults(queryParam, page); // Fetch results for the current page
+    setCurrentPage(page);
+    fetchSearchResults(queryParam, page);
   }, [queryParam, pageParam]);
 
   const fetchSearchResults = async (query, page) => {
     try {
-      const response = await searchPosts(query, page); // Make the API call
+      const response = await searchPosts(query, page);
       if (response.data && response.data.posts) {
-        setPosts(response.data.posts); // Set posts
-        setTotalPages(response.data.totalPages || 1); // Fallback to 1 if undefined
+        setPosts(response.data.posts);
+        setTotalPages(response.data.totalPages || 1);
       } else {
         setPosts([]);
         setError("No posts found for your search query.");
@@ -41,7 +41,7 @@ const SearchResults = () => {
     // eslint-disable-next-line no-unused-vars
     } catch (err) {
       setError("An error occurred while fetching search results.");
-      setPosts([]); // Clear posts if an error occurs
+      setPosts([]);
     }
   };
 
@@ -50,14 +50,14 @@ const SearchResults = () => {
       setWarning("Please enter a search query.");
       return;
     }
-    setWarning(""); // Clear warning
-    navigate(`/search?query=${encodeURIComponent(query)}&page=1`); // Update URL with query and reset page to 1
+    setWarning("");
+    navigate(`/search?query=${encodeURIComponent(query)}&page=1`);
   };
 
   const handlePageChange = (page) => {
-    setCurrentPage(page); // Update current page
-    setSearchParams({ query: searchQuery, page }); // Update the page query parameter in the URL
-    fetchSearchResults(searchQuery, page); // Fetch results for the new page
+    setCurrentPage(page);
+    setSearchParams({ query: searchQuery, page });
+    fetchSearchResults(searchQuery, page);
   };
 
   return (
@@ -68,15 +68,15 @@ const SearchResults = () => {
           type="text"
           placeholder="Search by title or author username..."
           value={query}
-          onChange={(e) => setQuery(e.target.value)} // Allow typing in the search input
+          onChange={(e) => setQuery(e.target.value)}
         />
         <button className="search-button" onClick={handleSearch}>
           Search
         </button>
       </div>
 
-      {warning && <p style={{ color: "orange" }}>{warning}</p>} {/* Warning message */}
-      {error && <p style={{ color: "red" }}>{error}</p>} {/* Error message */}
+      {warning && <p style={{ color: "orange" }}>{warning}</p>} 
+      {error && <p style={{ color: "red" }}>{error}</p>}
       {searchQuery && <h1>Search Results for &quot;{searchQuery}&quot;</h1>}
 
       {posts.length === 0 && !error && searchQuery && (
@@ -102,7 +102,6 @@ const SearchResults = () => {
         </div>
       ))}
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="pagination-container">
           {[...Array(totalPages)].map((_, index) => {
@@ -114,7 +113,7 @@ const SearchResults = () => {
                   currentPage === page ? "active" : ""
                 }`}
                 onClick={() => handlePageChange(page)}
-                disabled={currentPage === page} // Disable current page button
+                disabled={currentPage === page}
               >
                 {page}
               </button>

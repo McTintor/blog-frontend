@@ -6,14 +6,13 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // Check if a token exists in localStorage on app load
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const userData = localStorage.getItem("user"); // Get user data stored in localStorage
+    const userData = localStorage.getItem("user");
     
     if (token && userData) {
       try {
-        setUser(JSON.parse(userData)); // Set user data if available
+        setUser(JSON.parse(userData));
       } catch (error) {
         console.error("Error parsing user data from localStorage", error);
       }
@@ -23,14 +22,14 @@ export const AuthProvider = ({ children }) => {
   const login = (userData) => {
     console.log("userData:", userData);
     setUser(userData.user);
-    localStorage.setItem("token", userData.token); // Store token in localStorage
-    localStorage.setItem("user", JSON.stringify(userData.user)); // Store user data in localStorage
+    localStorage.setItem("token", userData.token);
+    localStorage.setItem("user", JSON.stringify(userData.user));
   };
 
   const logout = () => {
-    localStorage.removeItem("token"); // Remove token
-    localStorage.removeItem("user"); // Remove user data from localStorage
-    setUser(null); // Clear user state
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
   };
 
   return (

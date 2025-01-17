@@ -34,7 +34,6 @@ export const updatePost = (postId, data) => API.put(`/posts/${postId}`, data);
 export const getPostsByAuthor = (username, page = 1, pageSize = 3) =>
   API.get(`/posts/author/${username}?page=${page}&pageSize=${pageSize}`);
 
-// Modified searchPosts to include pagination
 export const searchPosts = (query, page = 1, pageSize = 3) => 
   API.get(`/search?query=${query}&page=${page}&pageSize=${pageSize}`);
 

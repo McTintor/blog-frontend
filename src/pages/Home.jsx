@@ -6,30 +6,29 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState("");
-  const [query, setQuery] = useState(""); // State for search query
-  const [warning, setWarning] = useState(""); // For empty query warning
-  const [currentPage, setCurrentPage] = useState(1); // Current page state
-  const [pageSize, setPageSize] = useState(5); // Number of posts per page
-  const [totalPages, setTotalPages] = useState(1); // Total pages for pagination
+  const [query, setQuery] = useState("");
+  const [warning, setWarning] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+  const [totalPages, setTotalPages] = useState(1);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Parse `page` from URL query parameters
     const page = parseInt(searchParams.get("page")) || 1;
     setCurrentPage(page);
   }, [searchParams]);
 
   useEffect(() => {
-    fetchPosts(); // Fetch posts when `currentPage` changes
+    fetchPosts();
   }, [currentPage]);
 
   const fetchPosts = async () => {
     try {
-      const response = await getPosts(currentPage, pageSize); // Fetch posts for the current page
+      const response = await getPosts(currentPage, pageSize);
       setPosts(response.data.posts);
-      setTotalPages(response.data.totalPages); // Set the total pages from the backend
+      setTotalPages(response.data.totalPages);
       setError("");
     } catch (err) {
       setError("Failed to fetch posts");
@@ -41,14 +40,14 @@ const Home = () => {
       setWarning("Please enter a search query.");
       return;
     }
-    setWarning(""); // Clear warning
-    navigate(`/search?query=${encodeURIComponent(query)}`); // Navigate to SearchResults with query
+    setWarning("");
+    navigate(`/search?query=${encodeURIComponent(query)}`);
   };
 
   const handlePageChange = (page) => {
     if (page < 1 || page > totalPages) return;
-    setCurrentPage(page); // Update local state
-    setSearchParams({ page }); // Update URL query parameter
+    setCurrentPage(page);
+    setSearchParams({ page });
   };
 
   return (
@@ -66,8 +65,8 @@ const Home = () => {
         </button>
       </div>
 
-      {warning && <p style={{ color: "orange" }}>{warning}</p>} {/* Warning message */}
-      {error && <p style={{ color: "red" }}>{error}</p>} {/* Error message */}
+      {warning && <p style={{ color: "orange" }}>{warning}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <h1>All Posts</h1>
       {posts.map((post) => (
         <div key={post.id} className="mainpage-post-container">

@@ -24,17 +24,16 @@ const Post = () => {
 
   const navigate = useNavigate();
 
-// Fetch the current user if logged in
 const fetchUser = async () => {
   try {
     const user = await getCurrentUser();
-    setCurrentUser(user); // If the user is logged in, set user details
+    setCurrentUser(user);
   } catch {
     // If user is not logged in, don't set currentUser, but allow viewing the post
   }
 };
 
-  // Fetch the post details
+
   const fetchPost = async () => {
     try {
       const response = await getPostById(postId);
@@ -151,7 +150,7 @@ const fetchUser = async () => {
     </>
   )}
 
-  {(isAuthor || isAdmin) && !isEditingPost && (  // Show edit/delete buttons only if not in edit mode
+  {(isAuthor || isAdmin) && !isEditingPost && (
     <div>
       <button className="edit-button" onClick={() => setIsEditingPost(true)}>Edit Post</button>
       <button className="edit-button" onClick={handleDeletePost}>Delete Post</button>
@@ -160,7 +159,7 @@ const fetchUser = async () => {
 
       <h3>Comments:</h3>
       <form className="comment-section" onSubmit={handleAddComment}>
-  {currentUser && ( // Only show comment box if user is logged in
+  {currentUser && (
     <>
       <textarea
         value={commentContent}
@@ -172,7 +171,7 @@ const fetchUser = async () => {
       <button className="submit-button" type="submit">Add Comment</button>
     </>
   )}
-  {!currentUser && <p>Please log in to comment.</p>}  {/* Display message for anonymous users */}
+  {!currentUser && <p>Please log in to comment.</p>}
 </form>
 
 <div className="comments-container">
@@ -209,7 +208,7 @@ const fetchUser = async () => {
 
       {(currentUser && (comment.userId === currentUser.data.id || currentUser.data.role === "admin")) && (
         <div>
-          {!editModeComment && ( // Show edit/delete buttons only if not in edit mode
+          {!editModeComment && (
             <>
               <button className="edit-button" onClick={() => { setEditModeComment(comment.id); setEditedComment(comment.content); }}>Edit 🖊️</button>
               <button className="edit-button" onClick={() => handleDeleteComment(comment.id)}>Delete ❌</button>

@@ -18,12 +18,10 @@ const Login = () => {
       const token = response.data.token;
       const user = response.data.user;
 
-      // Save token and user data, then update global auth state
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       loginUser({ user, token });
 
-      // Redirect to home
       navigate("/");
     // eslint-disable-next-line no-unused-vars
     } catch (err) {
